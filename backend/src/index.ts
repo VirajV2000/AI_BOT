@@ -1,16 +1,8 @@
-import  express from 'express';
-const app = express()
+import app from './app.js'
+import { connectToDatabase } from "./db/connection.js";
 
-app.use(express.json())
+connectToDatabase().then(()=>{
 
-app.post('/users/:id',(req,res)=>{
-  console.log(req.params.id);
-  
-  res.json({"id":req.params.id,"name":req.body.name});
-})
-app.get('/', (req, res) => {
-  res.send('hello world')
-  console.log(req.body);
-})
+  app.listen(3000,()=>console.log("Server started and connected to db"));
+}).catch((err)=>console.log(err));
 
-app.listen(3000,()=>console.log("Server started"));

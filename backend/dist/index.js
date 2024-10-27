@@ -1,13 +1,6 @@
-import express from 'express';
-const app = express();
-app.use(express.json());
-app.post('/users/:id', (req, res) => {
-    console.log(req.params.id);
-    res.json({ "id": req.params.id, "name": req.body.name });
-});
-app.get('/', (req, res) => {
-    res.send('hello world');
-    console.log(req.body);
-});
-app.listen(3000, () => console.log("Server started"));
+import app from './app.js';
+import { connectToDatabase } from "./db/connection.js";
+connectToDatabase().then(() => {
+    app.listen(3000, () => console.log("Server started and connected to db"));
+}).catch((err) => console.log(err));
 //# sourceMappingURL=index.js.map
