@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import pkg from "bcryptjs"; // Import bcryptjs as a package
 import { createToken } from "../utils/token-manager.js";
 import { COOKIE_NAME } from "../utils/constants.js";
+import { log } from "console";
 // import { compare } from "bcrypt";
 const { hash,compare } = pkg; 
 export const getUsers=async(req:Request,res:Response,next:NextFunction)=>{
@@ -69,9 +70,10 @@ export const UserLogin=async(req:Request,res:Response,next:NextFunction)=>{
 
 
 
-        res.status(201).json({mesage:"OK",id:user._id,});
+        res.status(201).json({mesage:"OK",email:user.email,name:user.name,});
     } catch (error) {
-        res.json({mesage:"All users",cause:error,});
+        console.log(error.toString());
+        res.json({mesage:"All users",cause:error.toString(),});
 
     }
 }

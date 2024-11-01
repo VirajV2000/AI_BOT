@@ -57,10 +57,11 @@ export const UserLogin = async (req, res, next) => {
             httpOnly: true,
             signed: true,
         });
-        res.status(201).json({ mesage: "OK", id: user._id, });
+        res.status(201).json({ mesage: "OK", email: user.email, name: user.name, });
     }
     catch (error) {
-        res.json({ mesage: "All users", cause: error, });
+        console.log(error.toString());
+        res.json({ mesage: "All users", cause: error.toString(), });
     }
 };
 //# sourceMappingURL=user-controller.js.map
