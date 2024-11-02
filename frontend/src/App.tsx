@@ -18,7 +18,7 @@ console.log(useAuth()?.isLoggedIn);
         <Route path="/" element={<Home/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/signup" element={<Signup/>}/>
-        <Route path="/chat" element={<Chat/>}/>
+        {useAuth()?.isLoggedIn && useAuth()?.user && <Route path="/chat" element={<Chat/>}/>}
         <Route path="*" element={<NotFound/>}/>
 
 

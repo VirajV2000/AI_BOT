@@ -23,7 +23,24 @@ export const UserSignUp = async (req, res, next) => {
         const hashedPass = await hash(password, 10);
         const user = new User({ name, email, password: hashedPass });
         await user.save();
-        res.status(201).json({ mesage: "OK", id: user._id, });
+        //clear cookie and create token and set it in cookie
+        res.clearCookie(COOKIE_NAME, {
+            domain: "localhost",
+            path: "/",
+            httpOnly: true,
+            signed: true,
+        });
+        const token = createToken(user._id.toString(), user.email, "7d");
+        const expires = new Date();
+        expires.setDate(expires.getDate() + 7);
+        res.cookie(COOKIE_NAME, token, {
+            domain: "localhost",
+            path: "/",
+            expires,
+            httpOnly: true,
+            signed: true,
+        });
+        res.status(201).json({ mesage: "OK", name: user.name, email: user.email });
     }
     catch (error) {
         res.json({ mesage: "All users", cause: error, });
@@ -74,6 +91,28 @@ export const verifyUser = async (req, res, next) => {
             return res.status(401).send("Permissions didn't match");
         }
         res.status(200).json({ mesage: "OK", email: user.email, name: user.name, });
+    }
+    catch (error) {
+        console.log(error.toString());
+        res.json({ mesage: "Error", cause: error.message });
+    }
+};
+export const userLogout = async (req, res, next) => {
+    try {
+        const user = await User.findById(res.locals.jwtData.id);
+        if (!user) {
+            return res.status(401).send("User not registered OR token malfunctioned");
+        }
+        if (user._id.toString() !== res.locals.jwtData.id) {
+            return res.status(401).send("Permissions didn't match");
+        }
+        res.clearCookie(COOKIE_NAME, {
+            domain: "localhost",
+            path: "/",
+            httpOnly: true,
+            signed: true,
+        });
+        res.status(200).json({ mesage: "OK" });
     }
     catch (error) {
         console.log(error.toString());
