@@ -78,3 +78,20 @@ export const UserLogin=async(req:Request,res:Response,next:NextFunction)=>{
     }
 }
 
+
+export const verifyUser=async(req:Request,res:Response,next:NextFunction)=>{
+    try {
+       const user=await User.findById(res.locals.jwtData.id);
+       if(!user){
+        return res.status(401).send("User not registered OR token malfunctioned");
+       }
+       if (user._id.toString() !== res.locals.jwtData.id) {
+        return res.status(401).send("Permissions didn't match");
+      }
+        res.status(200).json({mesage:"OK",email:user.email,name:user.name,});
+    } catch (error) {
+        console.log(error.toString());
+        res.json({mesage:"Error",cause:error.message});
+    }
+};
+

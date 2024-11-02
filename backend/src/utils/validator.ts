@@ -27,3 +27,7 @@ export const signupValidator=[
     body("name").notEmpty().withMessage("Name can not be empty"),
     ...loginValidator,
 ];
+
+export const messageValidator=[
+    body("message").notEmpty().withMessage("Name can not be empty"),
+];
